@@ -5,6 +5,7 @@
  */
 package org.campitos.fin;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,6 +34,16 @@ public class ControladorMensaje {
     public ArrayList<Mensaje> getTodos(){
          
         return (ArrayList<Mensaje>) repoMensaje.findAll();
+    }
+    @RequestMapping(value="/mensaje", method=RequestMethod.PUT, headers = {"Accept=application/json"})
+    public Estatus actualizar(@RequestBody String json)throws Exception{
+        Estatus e=new Estatus();
+        e.setSuccess(true);
+                 ObjectMapper  maper=new ObjectMapper();
+         Mensaje mensa=        maper.readValue(json, Mensaje.class);
+         repoMensaje.save(mensa);
+         System.out.println("El titulo es: "+mensa.getTitulo()+ " el cuerpo es:"+mensa.getCuerpo());
+        return e;
     }
     
 }
